@@ -1,26 +1,17 @@
-# Fast CSV reader
+# Fast csv-reader drop-in
 
-A faster drop-in replacement for make.fun's csv-reader 1.0.0: it answers
-exactly as csv-reader does on every case, in less CPU time.
+[![csv-reader-speed-01-run-20261121](https://make.fun/badge/csv-reader-speed-01-run-20261121.svg)](https://make.fun/bounty/csv-reader-speed-01-run-20261121)
+[![rank](https://make.fun/badge/csv-reader-speed-01-run-20261121/hibikazen/makefun-csv-reader-speed-01-run-20261121/rank.svg)](https://make.fun/bounty/csv-reader-speed-01-run-20261121)
+[![reward](https://make.fun/badge/csv-reader-speed-01-run-20261121/hibikazen/makefun-csv-reader-speed-01-run-20261121/reward.svg)](https://make.fun/bounty/csv-reader-speed-01-run-20261121)
 
-[![competition](https://make.fun/badge/csv-reader-speed-01-run-20261121.svg)](https://make.fun/c/csv-reader-speed-01-run-20261121)
-[![rank](https://make.fun/badge/csv-reader-speed-01-run-20261121/hibikazen/makefun-csv-reader-speed-01-run-20261121/rank.svg)](https://make.fun/c/csv-reader-speed-01-run-20261121)
-[![reward](https://make.fun/badge/csv-reader-speed-01-run-20261121/hibikazen/makefun-csv-reader-speed-01-run-20261121/reward.svg)](https://make.fun/c/csv-reader-speed-01-run-20261121)
+A faster drop-in for make.fun's own csv-reader 1.0.0, entered in
+[Read broken CSV files faster, 21 November 2026](https://make.fun/bounty/csv-reader-speed-01-run-20261121)
+on [make.fun](https://make.fun).
 
-Enter the competition at
-[make.fun](https://make.fun/c/csv-reader-speed-01-run-20261121).
-
-## How it works
-
-`solve.js` reads the input text once, left to right, in a single pass:
-
-- Unquoted fields are scanned with `charCodeAt` and sliced once.
-- Quoted fields jump to their closing quote with `indexOf`; a value is
-  only rebuilt segment by segment when an escape, a line break, or a
-  stray CR forces it.
-- Errors (`stray_cr`, `quote_junk`, `unterminated_quote`, `short_row`,
-  `long_row`) are recorded in the order met, each with the line its
-  record starts on and the record's index in `rows`.
-
-`main.ts` reads every case from `/input/cases.json`, answers each with
-`solve.js`, and writes `/output/answers.json`.
+`solve.js` answers every case exactly as csv-reader 1.0.0 does — same
+`{columns, rows, errors}` for every input, including stray CRs, unterminated
+quotes, quote junk, and short or long rows — but it does less work per
+character: it jumps between delimiters with `indexOf`, slices whole fields
+at once, and takes a whole-line shortcut whenever a line holds no quoted
+field and no carriage return. `main.ts` is the driver the harness runs: it
+reads the cases, answers each with `run`, and writes the answers.
